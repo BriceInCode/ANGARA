@@ -102,3 +102,72 @@ Une fois que la demande est enregistrée, un message de confirmation sera affich
 ```plaintext
 Votre demande a été enregistrée avec succès.
 Votre numéro de demande est : P0-20241009-000250
+
+
+
+## 4. Téléchargement du Document
+
+## Objectif
+
+Cette fonctionnalité permet à l'utilisateur de télécharger ou de mettre à jour un document officiel après avoir complété toutes les étapes de validation des informations et la génération d'un numéro de demande unique.
+
+## Processus
+
+### 1. Affichage de l'Option de Téléchargement et Mise à Jour du Document
+- Une fois que toutes les informations ont été validées et enregistrées, l'utilisateur est dirigé vers une page où il peut télécharger ou mettre à jour le document demandé.
+- Cette page affiche le numéro de la demande unique généré précédemment, tel que `P0-20241009-000250`, pour référence.
+- Si l'utilisateur a déjà téléchargé un document pour cette demande, une option pour **mettre à jour le document** sera visible. L'option pour mettre à jour doit clairement indiquer que le document actuel sera **écrasé** et **remplacé** par le nouveau fichier.
+
+### 2. Téléchargement ou Mise à Jour du Fichier
+- Lorsque l'utilisateur clique sur l'option **"Télécharger le Fichier"** ou **"Mettre à jour le Document"**, il peut sélectionner un nouveau fichier à télécharger.
+- **Critères de validation du fichier :**
+  - **Filtrage des Types de Documents** : Seuls certains types de fichiers sont acceptés :
+    - PDF
+    - DOCX
+    - JPG
+    - PNG
+    - JPEG
+    - D'autres formats de fichiers doivent être rejetés, et un message d'erreur sera affiché à l'utilisateur pour lui indiquer le type de fichier attendu.
+  - **Vérification de la Taille du Fichier** : Le fichier ne doit pas dépasser une certaine taille limite (par exemple, 10 Mo). Si le fichier est trop grand, un message d'erreur sera affiché.
+
+### 3. Écrasement et Suppression de l'Ancien Document
+- Si un document est déjà téléchargé pour cette demande et qu'un autre fichier est téléchargé, l'ancien document est automatiquement **écrasé** et **supprimé** avant l'ajout du nouveau fichier.
+- Une notification sera affichée à l'utilisateur pour l'informer de l'écrasement de l'ancien fichier.
+
+### 4. Vérification de l'Intégrité du Fichier
+- Avant le téléchargement, le système peut vérifier l'intégrité du fichier pour s'assurer qu'il n'a pas été altéré (par exemple, en utilisant un algorithme de somme de contrôle comme SHA-256).
+- Une option **"Vérifier l'Intégrité du Fichier"** peut être fournie pour permettre à l'utilisateur de valider l'intégrité avant de soumettre le fichier.
+
+### 5. Confirmation de Téléchargement ou Mise à Jour
+- Après un téléchargement réussi ou une mise à jour, un message de confirmation est affiché à l'utilisateur, indiquant que le fichier a été téléchargé ou mis à jour avec succès.
+- Ce message peut inclure des informations supplémentaires concernant l'utilisation du document téléchargé ou mis à jour.
+
+### 6. Options de Ré-téléchargement
+- Si l'utilisateur souhaite télécharger le fichier à nouveau, une option de ré-téléchargement sera disponible pendant une période limitée (par exemple, 24 heures après la première demande).
+- Si un nouveau document a été téléchargé, l'utilisateur pourra télécharger la version la plus récente du fichier.
+
+## Sécurité et Confidentialité
+
+- **Protection des Données** : Les fichiers téléchargés sont protégés par des mesures de sécurité, telles que le chiffrement lors du transfert et du stockage, afin de garantir qu'ils ne peuvent pas être interceptés ou modifiés par des tiers non autorisés.
+  
+- **Accès Restreint** : Seuls les utilisateurs ayant complété toutes les étapes nécessaires et dont la session est active peuvent accéder à cette fonctionnalité de téléchargement ou de mise à jour du document.
+
+- **Audit et Suivi des Modifications** : Chaque téléchargement ou mise à jour de fichier est journalisé pour des raisons de traçabilité et de sécurité, afin de savoir quel utilisateur a téléchargé ou mis à jour quel document et à quel moment cela a eu lieu.
+
+## Filtrage des Types de Documents Autorisés
+
+Voici les types de fichiers autorisés pour le téléchargement :
+
+- **PDF** (.pdf)
+- **Microsoft Word** (.docx)
+- **Image JPG** (.jpg)
+- **Image PNG** (.png)
+- **Image JPEG** (.jpeg)
+
+### Restrictions
+- Tout autre type de fichier sera rejeté avec un message d'erreur.
+- La taille maximale des fichiers doit être définie et communiquée à l'utilisateur (par exemple, 10 Mo).
+
+---
+
+**Note** : Cette fonctionnalité est conçue pour assurer la gestion sécurisée des documents, tout en permettant aux utilisateurs de facilement mettre à jour et vérifier les fichiers qu'ils ont téléchargés.
