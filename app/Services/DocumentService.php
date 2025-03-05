@@ -36,7 +36,7 @@ class DocumentService
         return $file->storeAs('documents', $fileName, 'public');
     }
 
-    private function deleteDocument(Document $document)
+    public function deleteDocument(Document $document)
     {
         if (Storage::exists($document->file_path)) {
             Storage::delete($document->file_path);

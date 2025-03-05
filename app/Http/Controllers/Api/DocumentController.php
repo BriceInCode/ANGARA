@@ -24,8 +24,11 @@ class DocumentController extends Controller
             $file = $request->file('file');
             $checksum = $request->input('checksum');
             $requestId = $request->input('request_id');
+
             $requestModel = \App\Models\Request::findOrFail($requestId);
+
             $document = $this->documentService->uploadOrUpdateDocument($requestModel, $file, $checksum);
+
             return Response::json([
                 'message' => 'Document téléchargé/mis à jour avec succès.',
                 'document' => $document
@@ -80,3 +83,4 @@ class DocumentController extends Controller
         }
     }
 }
+
