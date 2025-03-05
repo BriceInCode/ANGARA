@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\SessionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Session extends Model
 {
@@ -42,6 +43,9 @@ class Session extends Model
                     throw new \Exception("L'utilisateur a déjà une session active.");
                 }
             }
+
+            // Définir expires_at à une heure après la création de la session
+            $session->expires_at = Carbon::now()->addHour();
         });
     }
 }
