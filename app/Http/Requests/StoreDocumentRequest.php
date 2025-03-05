@@ -4,9 +4,22 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use OpenApi\Annotations as OA;
 
 class StoreDocumentRequest extends FormRequest
 {
+    /**
+     * @OA\Schema(
+     *   schema="StoreDocumentRequest",
+     *   type="object",
+     *   required={"request_id", "file_path", "file_type", "file_size", "checksum"},
+     *   @OA\Property(property="request_id", type="integer"),
+     *   @OA\Property(property="file_path", type="string"),
+     *   @OA\Property(property="file_type", type="string", enum={"pdf", "docx", "jpg", "png", "jpeg"}),
+     *   @OA\Property(property="file_size", type="integer"),
+     *   @OA\Property(property="checksum", type="string", format="sha256")
+     * )
+     */
     public function authorize()
     {
         return true;

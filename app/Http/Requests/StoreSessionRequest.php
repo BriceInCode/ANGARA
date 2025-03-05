@@ -5,9 +5,21 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\SessionStatus;
 use Illuminate\Validation\Rule;
+use OpenApi\Annotations as OA;
 
 class StoreSessionRequest extends FormRequest
 {
+    /**
+     * @OA\Schema(
+     *   schema="StoreSessionRequest",
+     *   type="object",
+     *   required={"user_id", "token", "status"},
+     *   @OA\Property(property="user_id", type="integer"),
+     *   @OA\Property(property="token", type="string"),
+     *   @OA\Property(property="status", type="string", enum={"EN_ATTENTE", "ACTIF"}),
+     *   @OA\Property(property="expires_at", type="string", format="date-time")
+     * )
+     */
     public function authorize()
     {
         return true;

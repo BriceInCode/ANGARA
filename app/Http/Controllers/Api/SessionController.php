@@ -10,17 +10,58 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
+/**
+ * @OA\Schema(
+ *     schema="Session",
+ *     type="object",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="user_id", type="integer", example=123),
+ *     @OA\Property(property="status", type="string", example="active"),
+ *     @OA\Property(property="otp", type="string", example="123456"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-05T14:15:00Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-05T14:15:00Z")
+ * )
+ */
 class SessionController extends Controller
 {
-
     protected $sessionService;
 
     public function __construct(SessionService $sessionService)
     {
-        $this->middleware('auth:sanctum')->except(methods: ['createSession']);
+        $this->middleware('auth:sanctum')->except(['createSession']);
         $this->sessionService = $sessionService;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/session",
+     *     summary="Créer une session",
+     *     tags={"Session"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"user_id"},
+     *             @OA\Property(property="user_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Session créée avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Session créée avec succès."),
+     *             @OA\Property(property="session", ref="#/components/schemas/Session"),
+     *             @OA\Property(property="token", type="string", example="your-generated-token-here")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erreur de création de session",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erreur lors de la création de la session.")
+     *         )
+     *     )
+     * )
+     */
     public function createSession(StoreSessionRequest $request)
     {
         try {
@@ -40,6 +81,41 @@ class SessionController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/session/{sessionId}/validate-otp",
+     *     summary="Valider le code OTP",
+     *     tags={"Session"},
+     *     @OA\Parameter(
+     *         name="sessionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"otp"},
+     *             @OA\Property(property="otp", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OTP validé avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="OTP validé avec succès."),
+     *             @OA\Property(property="session", ref="#/components/schemas/Session")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erreur de validation OTP",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erreur lors de la validation de l'OTP.")
+     *         )
+     *     )
+     * )
+     */
     public function validateOTP(Request $request, $sessionId)
     {
         try {
@@ -55,6 +131,34 @@ class SessionController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/session/{sessionId}/resend-otp",
+     *     summary="Renvoyer le code OTP",
+     *     tags={"Session"},
+     *     @OA\Parameter(
+     *         name="sessionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OTP renvoyé avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="OTP renvoyé avec succès."),
+     *             @OA\Property(property="otp", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erreur de renvoi d'OTP",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erreur lors du renvoi de l'OTP.")
+     *         )
+     *     )
+     * )
+     */
     public function resendOTP(Request $request, $sessionId)
     {
         try {
@@ -70,6 +174,33 @@ class SessionController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/session/{sessionId}",
+     *     summary="Afficher les informations d'une session",
+     *     tags={"Session"},
+     *     @OA\Parameter(
+     *         name="sessionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Session trouvée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="session", ref="#/components/schemas/Session")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Session non trouvée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Session introuvable.")
+     *         )
+     *     )
+     * )
+     */
     public function show($sessionId)
     {
         $session = Session::find($sessionId);
@@ -85,6 +216,20 @@ class SessionController extends Controller
         ], 404);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/sessions",
+     *     summary="Lister les sessions de l'utilisateur connecté",
+     *     tags={"Session"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des sessions",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="sessions", type="array", @OA\Items(ref="#/components/schemas/Session"))
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $user = Auth::user();
@@ -95,6 +240,41 @@ class SessionController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/session/{sessionId}",
+     *     summary="Mettre à jour une session",
+     *     tags={"Session"},
+     *     @OA\Parameter(
+     *         name="sessionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="string", example="completed")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Session mise à jour avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Session mise à jour avec succès."),
+     *             @OA\Property(property="session", ref="#/components/schemas/Session")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Session non trouvée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Session introuvable.")
+     *         )
+     *     )
+     * )
+     */
     public function update(StoreSessionRequest $request, $sessionId)
     {
         $session = Session::find($sessionId);
@@ -113,6 +293,33 @@ class SessionController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/session/{sessionId}",
+     *     summary="Supprimer une session",
+     *     tags={"Session"},
+     *     @OA\Parameter(
+     *         name="sessionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Session supprimée avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Session supprimée avec succès.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Session non trouvée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Session introuvable.")
+     *         )
+     *     )
+     * )
+     */
     public function destroy($sessionId)
     {
         $session = Session::find($sessionId);

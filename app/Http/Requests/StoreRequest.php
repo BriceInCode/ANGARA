@@ -5,9 +5,39 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\GenderType;
 use Illuminate\Validation\Rule;
+use OpenApi\Annotations as OA;
 
 class StoreRequest extends FormRequest
 {
+    /**
+     * @OA\Schema(
+     *   schema="StoreRequest",
+     *   type="object",
+     *   required={"session_id", "request_number", "document_type", "request_reason", "civil_center_reference", "birth_act_number", "birth_act_creation_date", "declaration_by", "first_name", "last_name", "gender", "birth_date", "birth_place", "father_name", "mother_name"},
+     *   @OA\Property(property="session_id", type="integer"),
+     *   @OA\Property(property="request_number", type="string"),
+     *   @OA\Property(property="document_type", type="string"),
+     *   @OA\Property(property="request_reason", type="string"),
+     *   @OA\Property(property="civil_center_reference", type="string"),
+     *   @OA\Property(property="birth_act_number", type="string"),
+     *   @OA\Property(property="birth_act_creation_date", type="string", format="date"),
+     *   @OA\Property(property="declaration_by", type="string"),
+     *   @OA\Property(property="authorized_by", type="string"),
+     *   @OA\Property(property="first_name", type="string"),
+     *   @OA\Property(property="last_name", type="string"),
+     *   @OA\Property(property="gender", type="string", enum={"MASCULIN", "FEMININ"}),
+     *   @OA\Property(property="birth_date", type="string", format="date"),
+     *   @OA\Property(property="birth_place", type="string"),
+     *   @OA\Property(property="father_name", type="string"),
+     *   @OA\Property(property="father_birth_date", type="string", format="date"),
+     *   @OA\Property(property="father_birth_place", type="string"),
+     *   @OA\Property(property="father_profession", type="string"),
+     *   @OA\Property(property="mother_name", type="string"),
+     *   @OA\Property(property="mother_birth_date", type="string", format="date"),
+     *   @OA\Property(property="mother_birth_place", type="string"),
+     *   @OA\Property(property="mother_profession", type="string")
+     * )
+     */
     public function authorize()
     {
         return true;

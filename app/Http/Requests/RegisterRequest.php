@@ -1,12 +1,21 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Annotations as OA;
 
 class RegisterRequest extends FormRequest
 {
-
+    /**
+     * @OA\Schema(
+     *   schema="RegisterRequest",
+     *   type="object",
+     *   required={"email", "phone"},
+     *   @OA\Property(property="email", type="string", format="email"),
+     *   @OA\Property(property="phone", type="string")
+     * )
+     */
     public function authorize()
     {
         return true;
