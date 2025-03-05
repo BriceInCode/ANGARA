@@ -32,6 +32,7 @@ class Session extends Model
         return $this->hasMany(Request::class);
     }
 
+
     protected static function booted()
     {
         static::creating(function ($session) {
@@ -43,8 +44,6 @@ class Session extends Model
                     throw new \Exception("L'utilisateur a déjà une session active.");
                 }
             }
-
-            // Définir expires_at à une heure après la création de la session
             $session->expires_at = Carbon::now()->addHour();
         });
     }
