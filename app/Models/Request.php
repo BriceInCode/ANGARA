@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Request extends Model
 {
     use HasFactory;
+    public $timestamps = true;
 
     protected $fillable = [
         'session_id',
@@ -33,8 +34,6 @@ class Request extends Model
         'mother_birth_date',
         'mother_birth_place',
         'mother_profession',
-        'created_at',
-        'updated_at',
     ];
 
     protected $casts = [
@@ -45,8 +44,6 @@ class Request extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    protected $attributes = ['updated_at' => null];
 
     public function session()
     {

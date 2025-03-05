@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\SessionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,7 +17,6 @@ class User extends Authenticatable
     protected $casts = ['otp_expires_at' => 'datetime'];
 
     protected $attributes = ['otp' => null];
-
 
     public function activeSession()
     {
