@@ -13,10 +13,18 @@ use Illuminate\Support\Facades\Response;
 class SessionController extends Controller
 {
 
+    protected $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->middleware('auth:sanctum')->except(methods: ['createSession']);
+        $this->sessionService = $sessionService;
+    }
+
     public function createSession(StoreSessionRequest $request)
     {
         try {
-            $session = SessionService::createSession($request->validated());
+            $session = $this->sessionService::createSession($request->validated());
             $user = $session->user;
             $token = $user->createToken('ANGARA-AUTHENTIC')->plainTextToken;
 
@@ -35,7 +43,7 @@ class SessionController extends Controller
     public function validateOTP(Request $request, $sessionId)
     {
         try {
-            $session = SessionService::validateOTP($sessionId, $request->otp);
+            $session = $this->sessionService::validateOTP($sessionId, $request->otp);
             return Response::json([
                 'message' => 'OTP validé avec succès.',
                 'session' => $session
@@ -50,7 +58,7 @@ class SessionController extends Controller
     public function resendOTP(Request $request, $sessionId)
     {
         try {
-            $otp = SessionService::resendOTP($sessionId);
+            $otp = $this->sessionService::resendOTP($sessionId);
             return Response::json([
                 'message' => 'OTP renvoyé avec succès.',
                 'otp' => $otp
